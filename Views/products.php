@@ -21,7 +21,7 @@ $typeProducts = category_parent_id(4);
                         <?php endforeach ?>
                     </div>
                 <?php endif ?>
-                <form method="post" id="formRegistroProducts" action="<?=host()?>/Controller/Productscontroller.php">
+                <form method="post" id="formRegistroProducts" action="<?=host()?>/Controller/Productscontroller.php" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
@@ -43,13 +43,13 @@ $typeProducts = category_parent_id(4);
                             </div>
                             <div class="form-group">
                                 <label for="images"><strong class="text-red">*</strong> Imagenes</label>
-                                <input type="file" class="form-control" name="images" id="images"  required="true">
+                                <input type="file" class="form-control" name="images[]" multiple="true" required="true">
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label for="nombre"><strong class="text-red">*</strong> Nombre</label>
-                                <input type="text" name="nombres" class="form-control" required="true" maxlength="255">
+                                <input type="text" name="nombre" class="form-control" required="true" maxlength="255">
                             </div>
                             <div class="form-group">
                                 <label for="cantidad"><strong class="text-red">*</strong> Cantidad</label>

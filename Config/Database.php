@@ -60,6 +60,12 @@ class Database
     protected $con;
 
     /**
+     * Variable para saber si hay una transaccion corriendo
+     * @var bool
+     */
+    private $transactionStarted = false;//Prevent nested transaction, mysql don't support it.
+
+    /**
      * Database constructor. Inicializa los parametros de conexion
      *
      * @throws \exception
@@ -122,5 +128,16 @@ class Database
 
         return $resultado;
         $this->con = null; //cerramos la conexión
+    }
+    public function lastId($table)
+    {
+        if ($this->transactionStarted === TRUE) {
+            return $this->link->lastInsertId(); //only for transactions
+        }
+        if (!empty($table)) {
+            $SQL = "SELECT LAST_INSERT_ID() AS ID FROM $table ORDER BY ID DESC LIMIT 1";
+            $rst = $this->query($SQL);
+            return $rst[0]->ID;
+        }
     }
 }
