@@ -11,6 +11,8 @@ $typeclients = category_parent_id(1);
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-lg-12">
+            <div class="alert alert-danger" style="display: none;" role="alert" id="msgRegistro">
+            </div>
             <?php if (!empty($_SESSION['error_registro']) && count($_SESSION['error_registro']) > 0): ?>
                 <div class="alert alert-danger" role="alert">
                     <?php foreach ($_SESSION['error_registro'] as $error): ?>
@@ -73,7 +75,7 @@ $typeclients = category_parent_id(1);
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Registrarse</button>
+                <button type="submit" class="btn btn-primary" id="btnRegister">Registrarse</button>
             </form>
         </div>
     </div>

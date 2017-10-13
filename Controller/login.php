@@ -5,7 +5,6 @@ $path = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR;
 require_once $path.'Services'.DIRECTORY_SEPARATOR.'Auth.php';
 $host = host();
 if ($_POST) {
-    sleep(2);
     $auth = new Auth();
     $_SESSION['errors'] = null;
     if ($auth->login($_POST['email'], $_POST['password'])) {
