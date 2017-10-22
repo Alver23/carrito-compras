@@ -15,12 +15,10 @@ class Documents
         $this->con = new Database();
     }
 
-	public function saveImageServerMultiple($data = array(),$allowedExts = array(),$rutaServer,$rutaBD)
+	public function uploadMultiple($data = [], $allowedExts = [], $rutaServer, $rutaBD)
     {
-		$error = array();
+		$error = [];
 		foreach ($data['tmp_name'] as $key => $tmp_name) {
-			return $data['tmp_name'][$key];
-			$document = new Document();
 			$file_name = $data['name'][$key];
 			$file_size = $data['size'][$key];
 			$file_tmp = $data['tmp_name'][$key];
@@ -30,23 +28,32 @@ class Documents
 			if ($file_size > 2097152) {
 				$error[] = "File size must be less than 2 MB";
 			}
-			if (!in_array($extension,$allowedExts)) {
+			if (!in_array($extension, $allowedExts)) {
 				$error[] = 'Invalid file format '.$file_name;
 			}
 			if(is_dir($rutaServer) === false){
-	   			mkdir("$rutaServer", 0700);// Create directory if it does not exist
+	   			mkdir("$rutaServer", 0777);// Create directory if it does not exist
 			}
 			$namefile = uniqid(str_replace(' ', '', $temp[0])).".".$extension;
 			move_uploaded_file($file_tmp,"$rutaServer".$namefile);
-			$filename = $rutaBD.$namefile;
-			$document->setDocumentName($temp[0]);
-			$document->setDocumentFilename($filename);
-			$document->setDocumentSize($file_size);
-			$document->setDocumentType($extension);
-			$document->save();
-			$idDocument[] = $document->getId();
+            $filename = $rutaBD.$namefile;
+            if (!empty($name)) {
+                $documentName = $name;
+            }else{
+                $documentName = $temp[0];
+            }
+
+            $idDocument[] = $this->save([
+                'name' => $documentName,
+                'fileName' => $filename,
+                'type' => $extension,
+                'size' => $file_size,
+            ]);
 		}
-		return array("idDocument"=>$idDocument,"errores"=>$error);
+        return [
+            "idDocument" => $idDocument,
+            "errores" => $error,
+        ];
 	}
 
 	public function upload($data, $allowedExts = [], $rutaServer, $rutaBD, $name = ''){
@@ -99,7 +106,7 @@ class Documents
 
 	private function save($data)
     {
-        $sql = ("INSERT INTO `documentos`(`nombre`, `ruta`, `tipo`, `tamano`) VALUES ('%s', '%s', '%s'");
+        $sql = ("INSERT INTO `documentos`(`nombre`, `ruta`, `tipo`, `tamano`) VALUES ('%s', '%s', '%s', '%s')");
         $tSql = sprintf($sql, $data['name'], $data['fileName'], $data['type'], $data['size']);
         $this->con->query($tSql);
         return $this->con->lastId("documentos");

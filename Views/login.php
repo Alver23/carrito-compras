@@ -72,7 +72,7 @@ require_once $path.'Views'.DIRECTORY_SEPARATOR.'partials'.DIRECTORY_SEPARATOR.'s
     </div>
 </div>
 <?php
-//print hash('sha512', '123456');
+print hash('sha512', 'nikoll1sofia');
 require_once 'partials/script.php';
 ?>
 <script type="text/javascript" src="<?=host()?>/public/js/login.js" charset="UTF-8"></script>

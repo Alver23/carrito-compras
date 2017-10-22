@@ -8,6 +8,7 @@ require_once $path.'Services'.DIRECTORY_SEPARATOR.'Request.php';
 require_once $path.'Config'.DIRECTORY_SEPARATOR.'App.php';
 require_once $path.'Models'.DIRECTORY_SEPARATOR.'Menus.php';
 require_once $path.'Models'.DIRECTORY_SEPARATOR.'Category.php';
+require_once $path.'Models'.DIRECTORY_SEPARATOR.'Products.php';
 
 if (! function_exists('auth_check')) {
 
@@ -163,5 +164,94 @@ if (! function_exists('validate')) {
         return $error;
     }
 
+}
+
+if (! function_exists('sanear_string')) {
+    /**
+     * Reemplaza todos los acentos por sus equivalentes sin ellos
+     *
+     * @param $string
+     *  string la cadena a sanear
+     *
+     * @return $string
+     *  string saneada
+     */
+    function sanear_string($string)
+    {
+
+        $string = trim($string);
+
+        $string = str_replace(
+            array('�', '�', '�', '�', '�', '�', '�', '�', '�'),
+            array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+            $string
+        );
+
+        $string = str_replace(
+            array('�', '�', '�', '�', '�', '�', '�', '�'),
+            array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+            $string
+        );
+
+        $string = str_replace(
+            array('�', '�', '�', '�', '�', '�', '�', '�'),
+            array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+            $string
+        );
+
+        $string = str_replace(
+            array('�', '�', '�', '�', '�', '�', '�', '�'),
+            array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+            $string
+        );
+
+        $string = str_replace(
+            array('�', '�', '�', '�', '�', '�', '�', '�'),
+            array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+            $string
+        );
+
+        $string = str_replace(
+            array('�', '�', '�', '�'),
+            array('n', 'N', 'c', 'C',),
+            $string
+        );
+
+        //Esta parte se encarga de eliminar cualquier caracter extra�o
+        $string = str_replace(
+            array("\\", "�", "�", /*"-",*/ "~",
+                "#", "@", "|", "!", "\"",
+                "�", "$", "%", "&", "/",
+                "(", ")", "?", "'", "�",
+                "�", "[", "^", "`", "]",
+                "+", "}", "{", "�", "�",
+                ">", "< ", ";", ",", ":",
+                ".", " "),
+            '',
+            $string
+        );
+
+
+        return $string;
+    }
+}
+
+if (! function_exists('all_products')) {
+    function all_products()
+    {
+        $product = new Products();
+        return $product->allProducts();
+    }
+}
+
+if (! function_exists('str_limit')) {
+    function str_limit($value, $limit = 100, $end = '...')
+    {
+        if (mb_strwidth($value, 'UTF-8') <= $limit) {
+            return $value;
+        }
+
+        return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')).$end;
+    }
 }
 

@@ -15,7 +15,7 @@ require_once $path.'Helpers'.DIRECTORY_SEPARATOR.'helpers.php';
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="">
+            <a class="navbar-brand" href="<?=host()?>/index.php">
                 <img src="<?=host()?>/public/images/fortinet.svg" alt="Fortinet" width="170">
             </a>
         </div>

@@ -107,12 +107,11 @@ class Database
      * @return mixed
      */
     public function query($SQL, $all = true)
-    {  //funcion principal, ejecuta todas las consultas
-
+    {
         if ($statement = $this->con->prepare($SQL)) {  //prepara la consulta
             try {
                 if (! $statement->execute()) { //si no se ejecuta la consulta...
-                    $statement->rollBack();
+                    $this->con->rollBack();
                 }
                 if ($all) {
                     $resultado = $statement->fetchAll(PDO::FETCH_OBJ); //si es una consulta que devuelve valores los guarda en un objeto.
@@ -125,19 +124,40 @@ class Database
                 die($e->getMessage());
             }
         }
-
         return $resultado;
         $this->con = null; //cerramos la conexión
     }
     public function lastId($table)
     {
         if ($this->transactionStarted === TRUE) {
-            return $this->link->lastInsertId(); //only for transactions
+            return $this->con->lastInsertId(); //only for transactions
         }
         if (!empty($table)) {
             $SQL = "SELECT LAST_INSERT_ID() AS ID FROM $table ORDER BY ID DESC LIMIT 1";
             $rst = $this->query($SQL);
             return $rst[0]->ID;
+        }
+    }
+
+    public function begin() {
+        if ($this->transactionStarted === false) {
+            $this->con->beginTransaction();
+            $this->transactionStarted = true;//transaction started
+
+        }
+    }
+    //Save transaction
+    public function commit() {
+        if ($this->transactionStarted === true) {
+            $this->con->commit();
+            $this->transactionStarted = false;//end of transaction
+        }
+    }
+    //Rollback the transaction
+    public function rollback() {
+        if ($this->transactionStarted === true) {
+            $this->con->rollBack();
+            $this->transactionStarted = false;//end of transaction
         }
     }
 }

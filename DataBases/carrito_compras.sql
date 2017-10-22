@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 12-10-2017 a las 06:41:00
--- Versión del servidor: 10.1.26-MariaDB
--- Versión de PHP: 7.1.8
+-- Servidor: localhost
+-- Tiempo de generación: 22-10-2017 a las 15:23:06
+-- Versión del servidor: 10.1.28-MariaDB
+-- Versión de PHP: 7.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -46,7 +46,10 @@ CREATE TABLE `categorias` (
 INSERT INTO `categorias` (`id`, `categoria_padre_id`, `nombre`, `ip_address`, `owner_user_id`, `updater_user_id`, `created_at`, `updated_at`) VALUES
 (1, NULL, 'Tipo de cliente', NULL, NULL, NULL, NULL, NULL),
 (2, 1, 'Persona Juridica', NULL, NULL, NULL, NULL, NULL),
-(3, 1, 'Persona Normal', NULL, NULL, NULL, NULL, NULL);
+(3, 1, 'Persona Normal', NULL, NULL, NULL, NULL, NULL),
+(4, NULL, 'Tipo de Producto', NULL, NULL, NULL, NULL, NULL),
+(5, 4, 'Red', NULL, NULL, NULL, NULL, NULL),
+(6, 4, 'Equipos', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -74,7 +77,9 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `usuario_id`, `tipo_cliente_id`, `identificacion`, `direccion`, `celular`, `telefono`, `ip_address`, `owner_user_id`, `updater_user_id`, `created_at`, `updated_at`) VALUES
-(3, 8, 3, 1143836518, '', '0', '0', NULL, NULL, NULL, '2017-10-07 18:45:48', '2017-10-07 18:45:48');
+(3, 8, 3, 1143836518, '', '0', '0', NULL, NULL, NULL, '2017-10-07 18:45:48', '2017-10-07 18:45:48'),
+(4, 9, 3, 1234, '', '0', '0', NULL, NULL, NULL, '2017-10-12 22:43:36', '2017-10-12 22:43:36'),
+(5, 10, 3, 123, '', '0', '0', NULL, NULL, NULL, '2017-10-12 22:51:41', '2017-10-12 22:51:41');
 
 -- --------------------------------------------------------
 
@@ -157,7 +162,7 @@ INSERT INTO `menus` (`id`, `parent_menu_id`, `nombre`, `url`, `orden`, `ip_addre
 (6, 4, 'Crear Usuarios', 'Views/home.php', 1, NULL, NULL, NULL, NULL, NULL),
 (7, 4, 'Editar Usuarios', NULL, 2, NULL, NULL, NULL, NULL, NULL),
 (8, 3, 'Crear Clientes', 'Views/registrarUsuarios.php', 1, NULL, NULL, NULL, NULL, NULL),
-(9, 5, 'Crear Productos', NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(9, 5, 'Crear Productos', 'Views/products.php', 1, NULL, NULL, NULL, NULL, NULL),
 (10, NULL, 'Productos', NULL, 1, '127.0.0.1', 1, 1, '2017-09-07 00:00:00', '2017-09-07 00:00:00'),
 (11, 10, 'Listar Productos', 'Views/home.php', 1, '127.0.0.1', 1, 1, '2017-09-07 00:00:00', '2017-09-07 00:00:00');
 
@@ -179,10 +184,9 @@ CREATE TABLE `menu_has_usuarios` (
 
 INSERT INTO `menu_has_usuarios` (`id`, `menu_id`, `usuario_id`) VALUES
 (1, 3, 1),
-(3, 4, 1),
-(4, 6, 1),
-(5, 7, 1),
+(8, 5, 1),
 (2, 8, 1),
+(9, 9, 1),
 (6, 10, 2),
 (7, 11, 2);
 
@@ -235,7 +239,7 @@ CREATE TABLE `permisos_has_usuarios` (
 CREATE TABLE `productos` (
   `id` int(11) UNSIGNED NOT NULL,
   `categoria_id` int(11) UNSIGNED NOT NULL,
-  `proveedor_id` int(11) UNSIGNED NOT NULL,
+  `proveedor_id` int(11) UNSIGNED DEFAULT NULL,
   `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `descripcion` text COLLATE utf8_spanish_ci NOT NULL,
   `precio` decimal(12,4) DEFAULT NULL,
@@ -304,7 +308,9 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `nombres`, `email`, `password`, `ip_address`, `owner_user_id`, `updater_user_id`, `created_at`, `updated_at`) VALUES
 (1, 'Angela Pantoja (Admin)', 'angelal.pantogay@aunarcali.edu.co', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', NULL, NULL, NULL, NULL, NULL),
 (2, 'Angela Pantoja (Cliente)', 'angela_Lorena15@hotmail.co', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', NULL, NULL, NULL, NULL, NULL),
-(8, 'angela pantoja', 'angelalorenayela@gmail.com', '3627909a29c31381a071ec27f7c9ca97726182aed29a7ddd2e54353322cfb30abb9e3a6df2ac2c20fe23436311d678564d0c8d305930575f60e2d3d048184d79', NULL, NULL, NULL, '2017-10-07 18:48:00', '2017-10-07 18:48:00');
+(8, 'angela pantoja', 'angelalorenayela@gmail.com', '3627909a29c31381a071ec27f7c9ca97726182aed29a7ddd2e54353322cfb30abb9e3a6df2ac2c20fe23436311d678564d0c8d305930575f60e2d3d048184d79', NULL, NULL, NULL, '2017-10-07 18:48:00', '2017-10-07 18:48:00'),
+(9, 'tes', 'test@test.com', '3627909a29c31381a071ec27f7c9ca97726182aed29a7ddd2e54353322cfb30abb9e3a6df2ac2c20fe23436311d678564d0c8d305930575f60e2d3d048184d79', NULL, NULL, NULL, '2017-10-12 22:36:00', '2017-10-12 22:36:00'),
+(10, 'de', 'test1@test.com', '3627909a29c31381a071ec27f7c9ca97726182aed29a7ddd2e54353322cfb30abb9e3a6df2ac2c20fe23436311d678564d0c8d305930575f60e2d3d048184d79', NULL, NULL, NULL, '2017-10-12 22:41:00', '2017-10-12 22:41:00');
 
 --
 -- Índices para tablas volcadas
@@ -440,67 +446,80 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT de la tabla `cotizaciones`
 --
 ALTER TABLE `cotizaciones`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `cotizacion_has_detalle`
 --
 ALTER TABLE `cotizacion_has_detalle`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `documentos`
 --
 ALTER TABLE `documentos`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `menus`
 --
 ALTER TABLE `menus`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
 --
 -- AUTO_INCREMENT de la tabla `menu_has_usuarios`
 --
 ALTER TABLE `menu_has_usuarios`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `permisos_has_usuarios`
 --
 ALTER TABLE `permisos_has_usuarios`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `productos_has_imagenes`
 --
 ALTER TABLE `productos_has_imagenes`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- Restricciones para tablas volcadas
 --
